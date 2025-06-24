@@ -10,15 +10,16 @@ const elementToggleFunc = function (elem) {
 // Certificate section filter functionality
 const initializeCertificateFilters = function() {
   // Get certificate section elements
-  const certificateSection = document.querySelector('.certificate-posts');
+  const certificateSection = document.querySelector('article[data-page="certificates"]');
+  const certificatePosts = certificateSection.querySelector('.certificate-posts');
   
-  if (!certificateSection) return; // Exit if certificate section doesn't exist
+  if (!certificateSection || !certificatePosts) return; // Exit if certificate section doesn't exist
   
-  const select = certificateSection.querySelector("[data-select]");
-  const selectItems = certificateSection.querySelectorAll("[data-select-item]");
-  const selectValue = certificateSection.querySelector("[data-select-value]");
-  const filterBtn = certificateSection.querySelectorAll("[data-filter-btn]");
-  const filterItems = certificateSection.querySelectorAll("[data-filter-item]");
+  const select = certificatePosts.querySelector("[data-select]");
+  const selectItems = certificatePosts.querySelectorAll("[data-select-item]");
+  const selectValue = certificatePosts.querySelector("[data-select-value]");
+  const filterBtn = certificatePosts.querySelectorAll("[data-filter-btn]");
+  const filterItems = certificatePosts.querySelectorAll("[data-filter-item]");
   
   // Filter function for certificates
   const filterFunc = function (selectedValue) {
@@ -56,19 +57,19 @@ const initializeCertificateFilters = function() {
   
   // Add event to all filter button items for large screen
   if (filterBtn.length > 0) {
-    let lastClickedBtn = filterBtn[0];
-    
     for (let i = 0; i < filterBtn.length; i++) {
       filterBtn[i].addEventListener("click", function () {
+        // Remove 'active' from all buttons first
+        filterBtn.forEach(btn => btn.classList.remove("active"));
+        
+        // Add 'active' to the clicked button
+        this.classList.add("active");
+        
         let selectedValue = this.innerText.toLowerCase();
         if (selectValue) {
           selectValue.innerText = this.innerText;
         }
         filterFunc(selectedValue);
-        
-        lastClickedBtn.classList.remove("active");
-        this.classList.add("active");
-        lastClickedBtn = this;
       });
     }
   }
